@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Faktura {{ cislo_faktury }}</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <div id="wrapper">
+    <div class="container">
+        <div class="row top">
+            <div class="col col-xs-6">
+                <img src="logo.png" class="img-responsive col-xs-12 col-md-10 col-lg-8">
+            </div>
+            <div class="col col-xs-6">
+                <h1 class="page-header">Faktura {{ cislo_faktury }}</h1>
+            </div>
+        </div>
+
+        <div class="row addresses">
+            <div class="col-xs-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Dodavatel
+                    </div>
+                    <div class="panel-body">
+                        <address>
+                            <span class="name">Tomáš Bedřich</span><br/>
+                            U Bachmače 1616/36<br/>
+                            326 00 Plzeň<br/>
+                        </address>
+                        <table class="table table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td class="label-short">IČ:</td>
+                                    <td>02513668</td>
+                                </tr>
+                                <!-- <tr>
+                                    <td class="label-short">DIČ:</td>
+                                    <td>CZ9309032117</td>
+                                </tr> -->
+                                <tr>
+                                    <td colspan="2">Neplátce DPH</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Odběratel
+                    </div>
+                    <div class="panel-body">
+                        <address>
+                            <span class="name">{{ jmeno_odberatele }}</span><br/>
+                            {{ adresa_odberatele_ulice_cislo }}<br/>
+                            {{ adresa_odberatele_PSC }}<br/>
+                        </address>
+                        <table class="table table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td class="label-short">IČ:</td>
+                                    <td>{{ IC }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-short">DIČ:</td>
+                                    <td>{{ DIC }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row properties">
+            <div class="col-xs-6 account">
+                <div class="well">
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <td>Bankovní účet:</td>
+                                <td class="value important">189731527/2010</td>
+                            </tr>
+                            <tr>
+                                <td>Variabilní symbol:</td>
+                                <td class="value important">{{ cislo_faktury }}</td>
+                            </tr>
+                            <tr>
+                                <td>Konstantní symbol:</td>
+                                <td class="value">0308</td>
+                            </tr>
+                            <tr>
+                                <td>Způsob platby:</td>
+                                <td class="value">převodem</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-xs-6 dates">
+                <div class="well">
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <td>Číslo objednávky:</td>
+                                <td class="value">{{ cislo_objednavky }}</td>
+                            </tr>
+                            <tr>
+                                <td>Datum vystavení:</td>
+                                <td class="value">{{ datum_vystaveni }}</td>
+                            </tr>
+                            <tr>
+                                <td>Datum splatnosti:</td>
+                                <td class="value important">{{ datum_splatnosti }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row items">
+            <div class="col-xs-12">
+                <h2 class="light sr-only">Položky faktury</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <th class="count">Počet</th>
+                        <th class="units">m. j.</th>
+                        <th class="name">Označení dodávky</th>
+                        <th class="price">Cena za m. j.</th>
+                        <th class="price sum">Celkem</th>
+                    </thead>
+                    <tbody>
+                {% for polozka in polozky %}
+                        <tr>
+                            <td class="count">{{ polozka.pocet_mnozstvi }}</td>
+                            <td class="units">{{ polozka.m_j }}</td>
+                            <td class="name">{{ polozka.oznaceni_dodavky }}</td>
+                            <td class="price">{{ polozka.cena_za_m_j }}</td>
+                            <td class="price sum">{{ polozka.cena_celkem }}</td>
+                        </tr>
+                {% endfor %}
+                        <tr>
+                            <td colspan="5" class="price sum total">Celkem k úhradě: <span class="num">{{ cena_celkem_k_uhrade }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+    <div id="footer">
+        <div class="container">
+            <p class="small">Fyzická osoba zapsaná v živnostenském rejstříku. Zboží zůstává až do úplného uhrazení majetkem dodavatele. Při zpožděné úhradě Vám budeme účtovat penále ve výši 0,05 % za každý započatý den prodlení.</p>
+        </div>
+    </div>
+
+  </body>
+</html>
