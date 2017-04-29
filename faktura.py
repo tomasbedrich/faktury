@@ -4,42 +4,37 @@ import datetime
 from click import prompt
 from jinja2 import Template
 from mena import mena_kc
+from ares import firma_info
 
 parameter_sablony = dict()
 today = datetime.date.today()
 
-print("Oberatel", "=" * 80)
-parameter_sablony["jmeno_odberatele"] = prompt("Jmeno")
-parameter_sablony["adresa_odberatele_ulice_cislo"] = prompt("Adresa")
-PSC = str(prompt("PSC", type=int))
-mesto = prompt("Mesto")
-PSC_mesto = "{} {}, {}".format(PSC[:3], PSC[3:], mesto)
-parameter_sablony["adresa_odberatele_PSC"] = PSC_mesto
-parameter_sablony["IC"] = prompt("IC", type=int)
-parameter_sablony["DIC"] = prompt("DIC", default="–")
+print("Odběratel", "=" * 80)
+parameter_sablony["odberatel"] = firma_info(prompt("IČ"))
+
 print("Faktura", "=" * 80)
-cislo_faktury = prompt("Cislo faktury", type=int)
+cislo_faktury = prompt("Číslo faktury", type=int)
 parameter_sablony["cislo_faktury"] = "{:%Y%m}{:0>2}".format(today, cislo_faktury)
-parameter_sablony["cislo_objednavky"] = prompt("Cislo objednavky", default="–")
+parameter_sablony["cislo_objednavky"] = prompt("Číslo objednávky", default="–")
 parameter_sablony["datum_vystaveni"] = "{:%d. %m. %Y}".format(today)
-dni = prompt("Delka splatnosti - dni", default=14)
+dni = prompt("Délka splatnosti - dny", default=14)
 datum_splatnosti = today + datetime.timedelta(days=dni)
 parameter_sablony["datum_splatnosti"] = "{:%d. %m. %Y}".format(datum_splatnosti)
 
 polozky = []
 parameter_sablony["polozky"] = polozky
 cena_celkem_k_uhrade = 0
-print("Polozky", "=" * 80)
+print("Položky", "=" * 80)
 
 while True:
     polozka = dict()
-    pocet_mnozstvi = prompt("Mnozstvi", default=1)
+    pocet_mnozstvi = prompt("Množství (pro ukončení zadej 0)", default=1)
     if pocet_mnozstvi == 0:
         break
     polozka["pocet_mnozstvi"] = str(pocet_mnozstvi)
-    polozka["m_j"] = prompt("Merna jednotka", default="ks.")
-    polozka["oznaceni_dodavky"] = prompt("Oznaceni dodavky")
-    cena_za_m_j = prompt("Cena za mernu jednotku", type=float)
+    polozka["m_j"] = prompt("Měrná jednotka", default="ks.")
+    polozka["oznaceni_dodavky"] = prompt("Označení dodávky")
+    cena_za_m_j = prompt("Cena za měrnou jednotku", type=float)
     polozka["cena_za_m_j"] = mena_kc(cena_za_m_j)
     cena_celkem = pocet_mnozstvi * cena_za_m_j
     polozka["cena_celkem"] = mena_kc(cena_celkem)

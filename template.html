@@ -53,11 +53,11 @@
                                     <td class="label-short">IČ:</td>
                                     <td>02513668</td>
                                 </tr>
-                                <!-- <tr>
+                                <tr>
                                     <td class="label-short">DIČ:</td>
                                     <td>CZ9309032117</td>
-                                </tr> -->
-                                <tr>
+                                </tr>
+                                 <tr>
                                     <td colspan="2">Neplátce DPH</td>
                                 </tr>
                             </tbody>
@@ -72,20 +72,26 @@
                     </div>
                     <div class="panel-body">
                         <address>
-                            <span class="name">{{ jmeno_odberatele }}</span><br/>
-                            {{ adresa_odberatele_ulice_cislo }}<br/>
-                            {{ adresa_odberatele_PSC }}<br/>
+                            <span class="name">{{ odberatel["jmeno"] }}</span><br/>
+                            {{ odberatel["adresa_1"] }}<br/>
+                            {{ odberatel["adresa_2"] }}<br/>
                         </address>
                         <table class="table table-condensed">
                             <tbody>
                                 <tr>
                                     <td class="label-short">IČ:</td>
-                                    <td>{{ IC }}</td>
+                                    <td>{{ odberatel["ic"] }}</td>
                                 </tr>
-                                <tr>
-                                    <td class="label-short">DIČ:</td>
-                                    <td>{{ DIC }}</td>
-                                </tr>
+                                {% if odberatel["dic"]: %}
+                                    <tr>
+                                        <td class="label-short">DIČ:</td>
+                                        <td>{{ odberatel["dic"] }}</td>
+                                    </tr>
+                                {% else: %}
+                                     <tr>
+                                        <td colspan="2">Neplátce DPH</td>
+                                    </tr>
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>

@@ -16,9 +16,14 @@ def firma_info(ic):
     jmeno = xml.find('.//D:OF', namespaces).text
     ulice = xml.find('.//D:NU', namespaces).text
     cislo_popisne = xml.find('.//D:CD', namespaces).text
-    cislo_orientacni = xml.find('.//D:CO', namespaces).text
     psc = xml.find('.//D:PSC', namespaces).text
     mesto = xml.find('.//D:N', namespaces).text
+
+    cislo_orientacni_element = xml.find('.//D:CO', namespaces)
+    if cislo_orientacni_element is not None:
+        cislo_orientacni = cislo_orientacni_element.text
+    else:
+        cislo_orientacni = None
 
     dic_element = xml.find('.//D:DIC', namespaces)
     if dic_element is not None:
@@ -27,8 +32,12 @@ def firma_info(ic):
         dic = None
 
     # typicky format adresy
-    adresa_1 = '{} {}/{}'.format(ulice, cislo_popisne, cislo_orientacni)
-    adresa_2 = '{} {}, {}'.format(psc[:3], psc[3:], mesto)
+    if cislo_orientacni:
+        adresa_1 = '{} {}/{}'.format(ulice, cislo_popisne, cislo_orientacni)
+    else:
+        adresa_1 = '{} {}'.format(ulice, cislo_popisne)
+
+    adresa_2 = '{} {} {}'.format(psc[:3], psc[3:], mesto)
 
     return {
         'jmeno': jmeno,
@@ -38,6 +47,7 @@ def firma_info(ic):
         'psc': psc,
         'mesto': mesto,
         'dic': dic,
+        'ic': ic,
         'adresa_1': adresa_1,
         'adresa_2': adresa_2
     }
